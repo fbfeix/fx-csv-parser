@@ -12,3 +12,13 @@ void CSVFile::addRow(CSVRow row) {
 void CSVFile::setHeader(CSVHeader header) {
     this->header = header;
 }
+
+CSVFile::CSVFile(const std::filesystem::path &filename) : filename(filename) {}
+
+std::string CSVFile::getName() const {
+    return filename.stem().string();
+}
+
+const CSVHeader &CSVFile::getHeader() const {
+    return header;
+}

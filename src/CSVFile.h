@@ -16,7 +16,13 @@ public:
 
     void setHeader(CSVHeader header);
 
+    const CSVHeader &getHeader() const;
+
+    explicit CSVFile(const std::filesystem::path &filename);
+
+    std::string getName() const;
 private:
+    std::filesystem::path filename;
     std::vector<CSVRow> rows;
     CSVHeader header;
 };

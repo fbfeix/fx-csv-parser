@@ -13,6 +13,10 @@ class CSVHeader {
 public:
     void addCell(CSVCell cell);
 
+    int getNumCells() const;
+
+    CSVCell getCell(int i) const;
+
 private:
     std::vector<CSVCell> cells;
 };

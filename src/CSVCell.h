@@ -18,12 +18,16 @@ namespace fs = std::filesystem;
 class CSVCell {
 public:
 
-    CSVCell(std::string value) : value_(std::move(value)) {
+    CSVCell(std::string value) : value(std::move(value)) {
 
     }
 
+    std::string getValue() const {
+        return value;
+    }
+
 private:
-    std::string value_;
+    std::string value;
 };
 
 

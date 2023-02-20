@@ -33,7 +33,7 @@ public:
             throw std::runtime_error("Failed to open file");
         }
 
-        CSVFile csvFile;
+        CSVFile csvFile(filepath);
         CSVHeader header;
         CSVRow row;
         bool isHeader = true;

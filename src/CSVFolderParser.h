@@ -33,7 +33,7 @@ public:
                 try {
                     // Parse the CSV file and add it to the map of files with the filename as the key
                     CSVFile file = parser.parse(entry.path().string());
-                    files[entry.path().filename().string()] = file;
+                    files.insert(std::make_pair(file.getName(), file));
                 } catch (std::exception &e) {
                     // If parsing the file fails, print an error message and continue to the next file
                     std::cerr << "Failed to parse " << entry.path().string() << ": " << e.what() << std::endl;
