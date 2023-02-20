@@ -22,13 +22,13 @@ namespace fs = std::filesystem;
 class CSVParser
 {
 public:
-    CSVParser(const fs::path& filepath, char delimiter)
-            : filepath_(filepath), delimiter_(delimiter)
+    CSVParser(char delimiter)
+            :  delimiter_(delimiter)
     {}
 
-    CSVFile parse()
+    CSVFile parse(const fs::path& filepath)
     {
-        std::ifstream file(filepath_);
+        std::ifstream file(filepath);
         if (!file.is_open()) {
             throw std::runtime_error("Failed to open file");
         }
@@ -63,16 +63,12 @@ public:
             }
         }
 
-        // Add the final row to the CSVFile object
-        csvFile.addRow(row);
-
         csvFile.setHeader(header);
 
         return csvFile;
     }
 
 protected:
-    fs::path filepath_;
     char delimiter_;
 
 private:
