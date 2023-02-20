@@ -1,0 +1,3 @@
+id,articleID,name,value
+1,1,description,"a nice, awesome bike"
+1,2,description,""" a "hard" bike helmet """
