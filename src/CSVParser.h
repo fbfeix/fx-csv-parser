@@ -12,6 +12,9 @@
 #include <string>
 #include <vector>
 #include "CSVCell.h"
+#include "CSVHeader.h"
+#include "CSVRow.h"
+#include "CSVFile.h"
 
 namespace fs = std::filesystem;
 
@@ -23,122 +26,94 @@ public:
             : filepath_(filepath), delimiter_(delimiter)
     {}
 
-    std::vector<CSVCell> parse()
+    CSVFile parse()
     {
-        if (!fs::exists(filepath_))
-        {
-            throw std::runtime_error("File does not exist: " + filepath_.string());
-        }
-
-        if (!fs::is_regular_file(filepath_))
-        {
-            throw std::runtime_error("File is not a regular file: " + filepath_.string());
-        }
-
         std::ifstream file(filepath_);
-
-        if (!file)
-        {
-            throw std::runtime_error("Failed to open file: " + filepath_.string());
+        if (!file.is_open()) {
+            throw std::runtime_error("Failed to open file");
         }
 
-        std::vector<std::string> column_names = read_column_names(file);
-        std::vector<CSVCell> cells = read_cells(file, column_names);
+        CSVFile csvFile;
+        CSVHeader header;
+        CSVRow row;
+        bool isHeader = true;
+        std::string line;
 
-        return cells;
+        while (std::getline(file, line)) {
+            // Create a stringstream from the line to tokenize it
+            std::stringstream ss(line);
+            std::string::const_iterator it = line.begin();
+
+            // Loop over the cells in the line
+            while (it != line.end()) {
+                CSVCell cell = findNextCell(it, line.end());
+                if (isHeader) {
+                    header.addCell(cell);
+                } else {
+                    row.addCell(cell);
+                }
+            }
+
+            if (isHeader) {
+                isHeader = false;
+            } else {
+                // Add the current row to the CSVFile object and create a new row object
+                csvFile.addRow(row);
+                row = CSVRow();
+            }
+        }
+
+        // Add the final row to the CSVFile object
+        csvFile.addRow(row);
+
+        csvFile.setHeader(header);
+
+        return csvFile;
     }
 
 protected:
     fs::path filepath_;
     char delimiter_;
 
-    std::vector<std::string> read_column_names(std::ifstream& file)
-    {
-        std::string line;
+private:
+    CSVCell findNextCell(std::string::const_iterator& it, const std::string::const_iterator& end) const {
+        std::string cellValue;
+        bool inQuotes = false;
+        int quoteCount = 0;
 
-        if (std::getline(file, line))
-        {
-            std::stringstream ss(line);
-            std::string column_name;
-            std::vector<std::string> column_names;
+        while (it != end) {
+            char c = *it;
+            ++it;
 
-            while (std::getline(ss, column_name, delimiter_))
-            {
-                column_names.push_back(column_name);
-            }
-
-            return column_names;
-        }
-        else
-        {
-            throw std::runtime_error("Failed to read column names");
-        }
-    }
-
-    std::vector<CSVCell> read_cells(std::ifstream& file, const std::vector<std::string>& column_names)
-    {
-        std::vector<CSVCell> cells;
-        std::string line;
-        size_t row_number = 1;
-
-        while (std::getline(file, line))
-        {
-            std::stringstream ss(line);
-            std::string cell_value;
-            size_t column_number = 0;
-
-            while (std::getline(ss, cell_value, delimiter_))
-            {
-                if (cell_value.size() > 0 && cell_value[0] == '"')
-                {
-                    std::string quoted_value = read_quoted_value(ss, cell_value);
-
-                    cells.push_back(CSVCell(column_names[column_number], quoted_value, row_number));
+            if (c == '"') {
+                if (!inQuotes) {
+                    // If we encounter a quote outside of quotes, we've started a quoted field
+                    inQuotes = true;
+                } else {
+                    // If we encounter a quote inside quotes, check if it's a triple quote
+                    quoteCount++;
+                    if (quoteCount == 3) {
+                        cellValue += '"';
+                        quoteCount = 0;
+                    }
                 }
-                else
-                {
-                    cells.push_back(CSVCell(column_names[column_number], cell_value, row_number));
+            } else {
+                // If we're inside quotes, add the character to the cell value
+                if (inQuotes) {
+                    cellValue += c;
+                } else if (c == delimiter_) {
+                    // If we encounter the separator outside of quotes, we've found the next cell
+                    return CSVCell(cellValue);
+                } else {
+                    // If we encounter any other character outside of quotes, add it to the cell value
+                    cellValue += c;
                 }
-
-                column_number++;
-            }
-
-            row_number++;
-        }
-
-        return cells;
-    }
-
-    std::string read_quoted_value(std::stringstream& ss, std::string cell_value)
-    {
-        std::string quoted_value = cell_value.substr(1);
-        bool found_closing_quote = false;
-
-        while (std::getline(ss, cell_value, delimiter_))
-        {
-            quoted_value += delimiter_ + cell_value;
-
-            if (cell_value.size() > 0 && cell_value.back() == '"')
-            {
-                quoted_value.pop_back();
-                std::string::size_type pos = 0;
-
-                while ((pos = quoted_value.find("\"\"", pos)) != std::string::npos)
-                {
-                    quoted_value.erase(pos, 1);
-                }
-
-                found_closing_quote = true;
-                break;
+                quoteCount = 0;
             }
         }
 
-        if (!found_closing_quote)
-        {
-            throw std::runtime_error("Missing closing quote in value: " + quoted_value);
-        }
-
-        return quoted_value;
+        // If we reach the end of the string, the last cell doesn't have a separator after it
+        return CSVCell(cellValue);
     }
 };
 

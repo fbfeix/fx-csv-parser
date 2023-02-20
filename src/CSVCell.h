@@ -10,25 +10,20 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace fs = std::filesystem;
 
-class CSVCell
-{
+class CSVCell {
 public:
-    CSVCell(const std::string& column_name, const std::string& value, size_t row_number)
-            : column_name_(column_name), value_(value), row_number_(row_number)
-    {}
 
-    const std::string& get_column_name() const { return column_name_; }
-    const std::string& get_value() const { return value_; }
-    size_t get_row_number() const { return row_number_; }
+    CSVCell(std::string value) : value_(std::move(value)) {
+
+    }
 
 private:
-    std::string column_name_;
     std::string value_;
-    size_t row_number_;
 };
 
 
