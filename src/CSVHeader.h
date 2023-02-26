@@ -6,6 +6,7 @@
 #define FXCSVPARSER_CSVHEADER_H
 
 
+#include <map>
 #include "CSVCell.h"
 
 class CSVHeader {
@@ -20,6 +21,9 @@ public:
 private:
     std::vector<CSVCell> cells;
 };
+
+
+
 
 
 #endif //FXCSVPARSER_CSVHEADER_H
