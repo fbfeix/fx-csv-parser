@@ -1,0 +1,6 @@
+digraph G {
+0[label="articles"];
+1[label="categories"];
+2[label="category-properties"];
+3[label="properties"];
+}

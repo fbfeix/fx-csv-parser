@@ -121,6 +121,7 @@ int main() {
 
 
     dbInfo.saveToJson(path / ".fx-rel.json");
+    dbInfo.createRelationGraph(path / "graph.dot");
 
 
     buildGraph(graphPrep);
