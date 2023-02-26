@@ -8,6 +8,7 @@
 #include "src/heuristics/jaccardSimilarity.h"
 #include "src/heuristics/jaroWinkler.h"
 #include "src/TableMetaInformation.h"
+#include "src/DatabaseMetaInformation.h"
 
 //std::map<std::string, float> calculateColumnNameSimilarities(const CSVHeader &header, const std::string &filename) {
 //    std::map<std::string, float> columnScores;
@@ -104,15 +105,22 @@ int main() {
     std::map<std::string, CSVHeader> map;
     std::map<std::string, std::map<std::string, float>> graphPrep;
 
+    DatabaseMetaInformation dbInfo;
+
     for (const auto &item: files) {
         auto info = TableMetaInformation::calculateColumnNameSimilarities(item.second.getHeader(),
                                                                             item.second.getName());
+
+        dbInfo.addTableMetaInformation(item.second.getName(), info);
 
         std::cout << info;
 
 
 //        graphPrep.insert(std::make_pair(item.second.getName(), data));
     }
+
+
+    dbInfo.saveToJson(path / ".fx-rel.json");
 
 
     buildGraph(graphPrep);
