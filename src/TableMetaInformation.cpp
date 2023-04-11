@@ -32,7 +32,7 @@ void TableMetaInformation::calculateForeignKeys(TableMetaInformation &table_meta
             }
 
             // Add the foreign key information to the table metadata
-            table_meta_info.addForeignKey(TableMetaInformation::ColumnInfo{best_match, max_similarity});
+//            table_meta_info.addForeignKey(TableMetaInformation::ReferenceInfo{best_match, max_similarity});
         }
     }
 }
@@ -73,11 +73,11 @@ TableMetaInformation::calculateColumnNameSimilarities(const CSVHeader &header, c
     return TableMetaInformation(column_info, filename);
 }
 
-void TableMetaInformation::addForeignKey(const TableMetaInformation::ColumnInfo &foreign_key) {
+void TableMetaInformation::addForeignKey(const TableMetaInformation::ReferenceInfo &foreign_key) {
     foreign_keys_.push_back(foreign_key);
 }
 
-const std::vector<TableMetaInformation::ColumnInfo> &TableMetaInformation::getForeignKeys() const {
+const std::vector<TableMetaInformation::ReferenceInfo> &TableMetaInformation::getForeignKeys() const {
     return foreign_keys_;
 }
 
@@ -88,7 +88,7 @@ const std::vector<TableMetaInformation::ColumnInfo> &TableMetaInformation::getCo
 TableMetaInformation::TableMetaInformation(std::vector<ColumnInfo> column_info, std::string file_name) : column_info_(
         std::move(column_info)), file_name_(std::move(file_name)) {}
 
-TableMetaInformation::TableMetaInformation(std::vector<ColumnInfo> column_info, std::vector<ColumnInfo> foreign_keys,
+TableMetaInformation::TableMetaInformation(std::vector<ColumnInfo> column_info, std::vector<ReferenceInfo> foreign_keys,
                                            std::string filename)
         : column_info_(std::move(column_info)), foreign_keys_(std::move(foreign_keys)),
           file_name_(std::move(filename)) {

@@ -24,22 +24,26 @@
         }
     ],
     "category-properties": "",
-    "properties": [
-        {
+    "properties": {
+        "": {
             "name": "id",
             "similarity": "0.99000001"
         },
-        {
+        "": {
             "name": "articleID",
             "similarity": "0.531481504"
         },
-        {
+        "": {
             "name": "name",
             "similarity": "0.450000018"
         },
-        {
+        "": {
             "name": "value",
             "similarity": "0.433333308"
+        },
+        "foreign_key": {
+            "name": "articleID",
+            "similarity": "0.930555522"
         }
-    ]
+    }
 }

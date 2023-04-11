@@ -12,7 +12,7 @@
 
 class DatabaseMetaInformation {
 public:
-    DatabaseMetaInformation() {}
+    DatabaseMetaInformation() = default;
 
     void addTableMetaInformation(const std::string &table_name, TableMetaInformation table_meta_info) {
         table_meta_info_map_.insert(std::make_pair(table_name, std::move(table_meta_info)));
@@ -37,8 +37,16 @@ public:
 
     void createRelationGraph(const std::string &filename);
 
+    void calculateForeignKeys();
+
+
+
 private:
     std::map<std::string, TableMetaInformation> table_meta_info_map_;
+
+    std::string
+    findRequiredReferenceColumn(const TableMetaInformation &tableMeta,
+                                const TableMetaInformation::ColumnInfo &originColInfo) const;
 };
 
 

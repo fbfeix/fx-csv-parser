@@ -113,15 +113,20 @@ int main() {
 
         dbInfo.addTableMetaInformation(item.second.getName(), info);
 
+
         std::cout << info;
 
 
 //        graphPrep.insert(std::make_pair(item.second.getName(), data));
     }
 
+    dbInfo.calculateForeignKeys();
+
 
     dbInfo.saveToJson(path / ".fx-rel.json");
     dbInfo.createRelationGraph(path / "graph.dot");
+
+
 
 
     buildGraph(graphPrep);

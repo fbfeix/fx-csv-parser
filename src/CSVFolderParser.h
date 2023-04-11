@@ -12,40 +12,32 @@
 #include "CSVFile.h"
 #include "CSVParser.h"
 
+/**
+ * Entry class for handling CSV files.
+ */
 class CSVFolderParser {
 public:
 
 
-    CSVFolderParser(char delimiter) : delimiter(delimiter) {
+    explicit CSVFolderParser(char delimiter) : delimiter(delimiter) {
 
     }
 
 
-
-    std::map<std::string, CSVFile> parse(const std::string &folderPath) {
-        std::map<std::string, CSVFile> files;
-        CSVParser parser(delimiter);
-
-        // Open the folder and loop over its contents
-        for (auto &entry: std::filesystem::directory_iterator(folderPath)) {
-            // Check if the file is a CSV file
-            if (entry.is_regular_file() && entry.path().extension() == ".csv") {
-                try {
-                    // Parse the CSV file and add it to the map of files with the filename as the key
-                    CSVFile file = parser.parse(entry.path().string());
-                    files.insert(std::make_pair(file.getName(), file));
-                } catch (std::exception &e) {
-                    // If parsing the file fails, print an error message and continue to the next file
-                    std::cerr << "Failed to parse " << entry.path().string() << ": " << e.what() << std::endl;
-                }
-            }
-        }
-
-        return files;
-    }
+    /**
+     * Looks into a folder and parses all its CSV files.
+     *
+     * @param folderPath
+     * @return
+     */
+    [[nodiscard]] std::map<std::string, CSVFile> parse(const std::string &folderPath) const;
 
 private:
     char delimiter;
+    /**
+     * The option if exceptions are allowed to happen during parsing a folder of files (If it should continue parsing).
+     */
+    bool allowFailedParsing = false;
 };
 
 #endif //FXCSVPARSER_CSVFOLDERPARSER_H

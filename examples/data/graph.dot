@@ -3,4 +3,5 @@ digraph G {
 1[label="categories"];
 2[label="category-properties"];
 3[label="properties"];
+3->0 [label="0.930556"];
 }
