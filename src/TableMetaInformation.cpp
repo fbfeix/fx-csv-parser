@@ -8,35 +8,6 @@
 #include "DatabaseMetaInformation.h"
 
 
-void TableMetaInformation::calculateForeignKeys(TableMetaInformation &table_meta_info,
-                                                const DatabaseMetaInformation &db_info) {
-    for (const auto &column_info: table_meta_info.getColumnInformation()) {
-        // Check if the column name indicates a foreign key
-        if (column_info.name.length() > 3 && column_info.name.substr(column_info.name.length() - 3) == "_id") {
-            // Extract the name of the referenced column
-            std::string referenced_column_name = column_info.name.substr(0, column_info.name.length() - 3);
-
-            // Find the best match for the referenced column name in other tables
-            float max_similarity = 0.0f;
-            std::string best_match;
-            for (const auto &[table_name, other_table_meta_info]: db_info.getTableMetaInformationMap()) {
-                if (table_name != table_meta_info.file_name_) {
-                    for (const auto &other_column_info: other_table_meta_info.getColumnInformation()) {
-                        float similarity = jaroWinklerDistance(referenced_column_name, other_column_info.name);
-                        if (similarity > max_similarity) {
-                            max_similarity = similarity;
-                            best_match = other_column_info.name;
-                        }
-                    }
-                }
-            }
-
-            // Add the foreign key information to the table metadata
-//            table_meta_info.addForeignKey(TableMetaInformation::ReferenceInfo{best_match, max_similarity});
-        }
-    }
-}
-
 std::ostream &operator<<(std::ostream &os, const TableMetaInformation &information) {
     os << "\n\n+ " << information.file_name_ << "\n";
     os << "+----------+----------+" << "\n";

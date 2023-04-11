@@ -80,7 +80,7 @@ void DatabaseMetaInformation::calculateForeignKeys() {
     for (auto &[originTableName, originTableInfo]: this->table_meta_info_map_) {
 
         // go through all the columns of this table and try to find foreign keys
-        for (const auto originColInfo: originTableInfo.getColumnInformation()) {
+        for (const auto& originColInfo: originTableInfo.getColumnInformation()) {
             for (const auto &[targetTableName, targetTableInfo]: this->table_meta_info_map_) {
                 std::cout << "mau";
 
@@ -97,6 +97,7 @@ void DatabaseMetaInformation::calculateForeignKeys() {
                     TableMetaInformation::ReferenceInfo foreignKey;
                     foreignKey.targetColumn = this->findRequiredReferenceColumn(targetTableInfo, originColInfo);
                     foreignKey.targetTableName = targetTableName;
+                    foreignKey.sourceColumn = originColInfo.name;
                     foreignKey.similarity = distance;
 
                     originTableInfo.addForeignKey(foreignKey);

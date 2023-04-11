@@ -22,8 +22,6 @@ class TableMetaInformation {
 public:
 
 
-
-
     struct ColumnInfo {
         std::string name;
         /**
@@ -33,7 +31,11 @@ public:
         float similarity = 0.0f;
 
 
-        boost::property_tree::ptree toPropertyTree() const {
+        /**
+         * Serialize the class as a boost property tree.
+         * @return
+         */
+        [[nodiscard]] boost::property_tree::ptree toPropertyTree() const {
             boost::property_tree::ptree pt;
             pt.put("name", name);
             pt.put("similarity", similarity);
@@ -45,9 +47,16 @@ public:
         std::string targetTableName;
         std::string targetColumn;
         std::string sourceColumn;
+        /**
+         * Represents the similarity of the source column name to the referenced column name.
+         */
         float similarity;
 
-        boost::property_tree::ptree toPropertyTree() const {
+        /**
+         * Serialize the class as a boost property tree.
+         * @return
+         */
+        [[nodiscard]] boost::property_tree::ptree toPropertyTree() const {
             boost::property_tree::ptree pt;
             pt.put("targetTableName", targetTableName);
             pt.put("targetColumn", targetColumn);
@@ -62,15 +71,13 @@ public:
                          std::string filename);
 
 
-    const std::vector<ColumnInfo> &getColumnInformation() const;
+    [[nodiscard]] const std::vector<ColumnInfo> &getColumnInformation() const;
 
-    const std::vector<ReferenceInfo>& getForeignKeys() const;
+    [[nodiscard]] const std::vector<ReferenceInfo>& getForeignKeys() const;
 
     void addForeignKey(const ReferenceInfo& foreign_key);
 
     static TableMetaInformation calculateColumnNameSimilarities(const CSVHeader &header, const std::string &filename);
-
-    void calculateForeignKeys(TableMetaInformation& table_meta_info, const DatabaseMetaInformation& db_info);
 
 
     friend std::ostream &operator<<(std::ostream &os, const TableMetaInformation &information);

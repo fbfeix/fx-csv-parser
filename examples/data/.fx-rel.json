@@ -59,7 +59,7 @@
             {
                 "targetTableName": "articles",
                 "targetColumn": "articleID",
-                "sourceColumn": "",
+                "sourceColumn": "articleID",
                 "similarity": "0.930555522"
             }
         ],
