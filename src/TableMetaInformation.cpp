@@ -95,3 +95,7 @@ TableMetaInformation::TableMetaInformation(std::vector<ColumnInfo> column_info, 
 
 }
 
+TableMetaInformation::TableMetaInformation() {
+
+}
+

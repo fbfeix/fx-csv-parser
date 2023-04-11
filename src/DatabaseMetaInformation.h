@@ -18,7 +18,7 @@ public:
         table_meta_info_map_.insert(std::make_pair(table_name, std::move(table_meta_info)));
     }
 
-    const TableMetaInformation *getTableMetaInformation(const std::string &table_name) const {
+    [[nodiscard]] const TableMetaInformation *getTableMetaInformation(const std::string &table_name) const {
         auto it = table_meta_info_map_.find(table_name);
         if (it == table_meta_info_map_.end()) {
             return nullptr;
@@ -27,7 +27,7 @@ public:
         }
     }
 
-    const std::map<std::string, TableMetaInformation> &getTableMetaInformationMap() const {
+    [[nodiscard]] const std::map<std::string, TableMetaInformation> &getTableMetaInformationMap() const {
         return table_meta_info_map_;
     }
 

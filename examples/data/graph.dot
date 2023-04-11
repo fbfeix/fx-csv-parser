@@ -2,6 +2,6 @@ digraph G {
 0[label="articles"];
 1[label="categories"];
 2[label="category-properties"];
-3[label="properties"];
+3[label="product-properties"];
 3->0 [label="0.930556"];
 }

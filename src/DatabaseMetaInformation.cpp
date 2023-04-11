@@ -9,48 +9,21 @@
 
 void DatabaseMetaInformation::saveToJson(const std::string &filename) const {
     using boost::property_tree::ptree;
+
     ptree pt;
     for (const auto &[table_name, table_meta_info]: table_meta_info_map_) {
-        ptree table_pt;
-        for (const auto &column_info: table_meta_info.getColumnInformation()) {
-            ptree column_pt;
-            column_pt.put("name", column_info.name);
-            column_pt.put("similarity", column_info.similarity);
-            table_pt.push_back(std::make_pair("", column_pt));
-        }
-        for (const auto &foreign_key: table_meta_info.getForeignKeys()) {
-            ptree foreign_key_pt;
-            foreign_key_pt.put("name", foreign_key.targetColumn);
-            foreign_key_pt.put("similarity", foreign_key.similarity);
-            table_pt.push_back(std::make_pair("foreign_key", foreign_key_pt));
-        }
-        pt.push_back(std::make_pair(table_name, table_pt));
+        pt.push_back(std::make_pair(table_name, table_meta_info.toPropertyTree()));
     }
     boost::property_tree::write_json(filename, pt);
 }
 
 void DatabaseMetaInformation::loadFromJson(const std::string &filename) {
-    using boost::property_tree::ptree;
-    ptree pt;
+    boost::property_tree::ptree pt;
     boost::property_tree::read_json(filename, pt);
-    for (const auto &[table_name, table_pt]: pt) {
-        std::vector<TableMetaInformation::ColumnInfo> column_info;
-        std::vector<TableMetaInformation::ReferenceInfo> fkeys;
-        for (const auto &[key, column_pt]: table_pt) {
-            if (key == "") {
-                std::string column_name = column_pt.get<std::string>("name");
-                float similarity = column_pt.get<float>("similarity");
-                column_info.emplace_back(TableMetaInformation::ColumnInfo{column_name, similarity});
-            } else if (key == "foreign_key") {
-                std::string referenced_column_name = column_pt.get<std::string>("name");
-                float similarity = column_pt.get<float>("similarity");
-//                fkeys.emplace_back(TableMetaInformation::ReferenceInfo{referenced_column_name,
-//                                                                       similarity=similarity});
-            }
-        }
-        TableMetaInformation table_meta_info(column_info, fkeys, table_name);
 
-        addTableMetaInformation(table_name, std::move(table_meta_info));
+    for (const auto &table_entry: pt) {
+        TableMetaInformation table_meta = TableMetaInformation::fromPropertyTree(table_entry.second);
+        table_meta_info_map_[table_entry.first] = table_meta;
     }
 }
 
@@ -113,9 +86,9 @@ void DatabaseMetaInformation::calculateForeignKeys() {
 
 
                 float distance = jaroWinklerDistance(originColInfo.name, targetTableName);
-                if(distance > 0.85) {
+                if (distance > 0.85) {
                     //currently not supported; @todo add check for primary key or something like that
-                    if(originTableName == targetTableName) {
+                    if (originTableName == targetTableName) {
                         continue;
                     }
 
@@ -141,11 +114,9 @@ std::string DatabaseMetaInformation::findRequiredReferenceColumn(const TableMeta
 
 
     for (const auto &info: tableMeta.getColumnInformation()) {
-        if(info.name == "id") {
+        if (info.name == "id") {
             return info.name;
         }
-
-
 
 
         if (info.name == originColInfo.name) {

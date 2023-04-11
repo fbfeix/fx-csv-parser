@@ -1,49 +1,68 @@
 {
-    "articles": [
-        {
-            "name": "articleID",
-            "similarity": "0.930555522"
-        },
-        {
-            "name": "name",
-            "similarity": "0.583333313"
-        },
-        {
-            "name": "price",
-            "similarity": "0.766666651"
-        }
-    ],
-    "categories": [
-        {
-            "name": "id",
-            "similarity": "0.99000001"
-        },
-        {
-            "name": "name",
-            "similarity": "0.566666663"
-        }
-    ],
-    "category-properties": "",
-    "properties": {
-        "": {
-            "name": "id",
-            "similarity": "0.99000001"
-        },
-        "": {
-            "name": "articleID",
-            "similarity": "0.531481504"
-        },
-        "": {
-            "name": "name",
-            "similarity": "0.450000018"
-        },
-        "": {
-            "name": "value",
-            "similarity": "0.433333308"
-        },
-        "foreign_key": {
-            "name": "articleID",
-            "similarity": "0.930555522"
-        }
+    "articles": {
+        "column_info": [
+            {
+                "name": "articleID",
+                "similarity": "0.930555522"
+            },
+            {
+                "name": "name",
+                "similarity": "0.583333313"
+            },
+            {
+                "name": "price",
+                "similarity": "0.766666651"
+            }
+        ],
+        "foreign_keys": "",
+        "file_name": "articles"
+    },
+    "categories": {
+        "column_info": [
+            {
+                "name": "id",
+                "similarity": "0.99000001"
+            },
+            {
+                "name": "name",
+                "similarity": "0.566666663"
+            }
+        ],
+        "foreign_keys": "",
+        "file_name": "categories"
+    },
+    "category-properties": {
+        "column_info": "",
+        "foreign_keys": "",
+        "file_name": "category-properties"
+    },
+    "product-properties": {
+        "column_info": [
+            {
+                "name": "id",
+                "similarity": "0.99000001"
+            },
+            {
+                "name": "articleID",
+                "similarity": "0.472222239"
+            },
+            {
+                "name": "name",
+                "similarity": "0"
+            },
+            {
+                "name": "value",
+                "similarity": "0.503703713"
+            }
+        ],
+        "foreign_keys": [
+            {
+                "targetTableName": "articles",
+                "targetColumn": "articleID",
+                "sourceColumn": "",
+                "similarity": "0.930555522"
+            }
+        ],
+        "file_name": "product-properties"
     }
 }

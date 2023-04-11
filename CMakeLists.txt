@@ -24,4 +24,9 @@ add_executable(FxCSVParser main.cpp
         src/ForeignKeyHeuristics.cpp
         src/ForeignKeyHeuristics.h
         src/TableMetaInformation.cpp
-        src/TableMetaInformation.h src/DatabaseMetaInformation.cpp src/DatabaseMetaInformation.h src/Database.cpp src/Database.h)
+        src/TableMetaInformation.h
+        src/DatabaseMetaInformation.cpp
+        src/DatabaseMetaInformation.h
+        src/Database.cpp
+        src/Database.h
+        )
