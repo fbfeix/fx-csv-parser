@@ -89,49 +89,10 @@ public:
     }
 
 
-    boost::property_tree::ptree toPropertyTree() const {
-        boost::property_tree::ptree pt;
-
-        boost::property_tree::ptree column_info_pt;
-        for (const auto &column : column_info_) {
-            column_info_pt.push_back(std::make_pair("", column.toPropertyTree()));
-        }
-        pt.add_child("column_info", column_info_pt);
-
-        boost::property_tree::ptree foreign_keys_pt;
-        for (const auto &reference : foreign_keys_) {
-            foreign_keys_pt.push_back(std::make_pair("", reference.toPropertyTree()));
-        }
-        pt.add_child("foreign_keys", foreign_keys_pt);
-
-        pt.put("file_name", file_name_);
-        return pt;
-    }
+    [[nodiscard]] boost::property_tree::ptree toPropertyTree() const;
 
 
-    static TableMetaInformation fromPropertyTree(const boost::property_tree::ptree &pt) {
-        TableMetaInformation table_meta;
-
-        for (const auto &column_entry : pt.get_child("column_info")) {
-            ColumnInfo column_info;
-            column_info.name = column_entry.second.get<std::string>("name");
-            column_info.similarity = column_entry.second.get<float>("similarity");
-            table_meta.addColumnInfo(column_info);
-        }
-
-        for (const auto &reference_entry : pt.get_child("foreign_keys")) {
-            ReferenceInfo reference_info;
-            reference_info.targetTableName = reference_entry.second.get<std::string>("targetTableName");
-            reference_info.targetColumn = reference_entry.second.get<std::string>("targetColumn");
-            reference_info.sourceColumn = reference_entry.second.get<std::string>("sourceColumn");
-            reference_info.similarity = reference_entry.second.get<float>("similarity");
-            table_meta.addReferenceInfo(reference_info);
-        }
-
-        table_meta.setFileName(pt.get<std::string>("file_name"));
-
-        return table_meta;
-    }
+    static TableMetaInformation fromPropertyTree(const boost::property_tree::ptree &pt);
 
 
     TableMetaInformation();
