@@ -20,8 +20,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//
-// Created by felix on 20.02.23.
-//
 
 #include "CSVParser.h"

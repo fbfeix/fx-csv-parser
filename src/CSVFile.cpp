@@ -20,10 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//
-// Created by felix on 20.02.23.
-//
-
 #include "CSVFile.h"
 
 void CSVFile::addRow(CSVRow row) {

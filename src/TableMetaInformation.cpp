@@ -20,10 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//
-// Created by felix on 26.02.23.
-//
-
 #include "TableMetaInformation.h"
 
 #include <utility>
